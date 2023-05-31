@@ -1,0 +1,8 @@
+.form {
+    width: 700px;
+    background: linear-gradient(89deg,  #04c8de 0%, #860e6c 100%);
+}
+
+button {
+    min-width: 5em;
+}
