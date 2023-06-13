@@ -8,22 +8,25 @@ import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 
+const IMG_ID = 'imgId';
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
       input: '',
-      status: false,
+      imageUrl: '',
       output: {},
       bBoxes: [],
-      confidences: []
+      confidences: [],
+      box: {}
     }
   }
 
   calcBoundingBoxes = (data) => {
     const regions = data.outputs[0].data.regions;
-    this.setState({bBoxes:      regions.map(region => region.region_info.bounding_box)});
-    this.setState({confidences: regions.map(region => region.value)});
+    this.setState({bBoxes:      regions.map(region => region.region_info.bounding_box), 
+                  confidences:  regions.map(region => region.value)});
   }
 
   onInputChange = (event) => {
@@ -31,6 +34,8 @@ class App extends React.Component {
   }
 
   onDetectSubmit = (event) => {
+    this.setState({imageUrl: this.state.input});
+
     const PAT = '45148ef82a8848ce9f73d68c9f0c5639';
     // Specify the correct user_id/app_id pairings
     // Since you're making inferences outside your app's scope
@@ -55,7 +60,7 @@ class App extends React.Component {
           }
       ]
     });
-
+    
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -70,12 +75,10 @@ class App extends React.Component {
       .then(result => {
             const res = JSON.parse(result);
             if (res.status.code === 10000) {
-              this.setState({status: true});
               this.setState({output: res});
               this.calcBoundingBoxes(res);
             } else {
               console.error('Not OK!')
-              console.error('code', res.status.code);
               console.error('description', res.status.description);
               console.error('Reason:', res.outputs[0].status.description);
               throw new Error(res.status.description);
@@ -98,8 +101,8 @@ class App extends React.Component {
           <ImageLinkForm onInputChange={this.onInputChange} onDetectSubmit={this.onDetectSubmit} />
           <FaceRecognition 
                 status={this.state.status} 
-                input={this.state.input} 
-                id = "imgId"
+                imageUrl={this.state.imageUrl} 
+                imgId = {IMG_ID}
                 bBoxes={this.state.bBoxes} 
                 confidences={this.state.confidences} 
           />

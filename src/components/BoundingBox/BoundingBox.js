@@ -3,11 +3,9 @@ import './BoundingBox.css';
 
 
 const BoundingBox = ({imgId, box, boxId}) => {
-console.log('IN BOUNDING BOX')    
     const imgFaces = document.getElementById(imgId);
     const width = imgFaces.width;
     const height= imgFaces.height;
-console.log(boxId, width, height);   
 
     return (
             <div key={boxId} className='bounding-box' 
