@@ -3,13 +3,13 @@ import BoundingBox from "../BoundingBox/BoundingBox.js";
 import './FaceRecognition.css';
 
 
-const FaceRecognition = ({status, imageUrl, imgId ,bBoxes, confidences}) => {
+const FaceRecognition = ({imageUrl, imgId ,bBoxes, hw}) => {
     return (
         <div className='center ma'>
             <div className='absolute mt2'>
                 <img id={imgId} src={imageUrl} alt="looking for faces..." width="500px"  height="auto" />
                 {bBoxes.map((box, i) => 
-                    <BoundingBox imgId={imgId} box={box} boxId={i} />
+                    <BoundingBox box={box} hw={hw} boxId={i} />
                 )}
             </div>
         </div>

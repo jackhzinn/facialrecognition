@@ -2,11 +2,9 @@ import React from "react";
 import './BoundingBox.css';
 
 
-const BoundingBox = ({imgId, box, boxId}) => {
-    const imgFaces = document.getElementById(imgId);
-    const width = imgFaces.width;
-    const height= imgFaces.height;
-
+const BoundingBox = ({box, boxId, hw}) => {
+    const {width, height} = hw;
+    
     return (
             <div key={boxId} className='bounding-box' 
                 style={{top:    box.top_row*height,

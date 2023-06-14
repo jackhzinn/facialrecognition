@@ -3,8 +3,9 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-//import ImageDisplay from './components/ImageDisplay/ImageDisplay';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import SignIn from './components/SignIn/SignIn';
+import Register from './components/Register/Register';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 
@@ -16,17 +17,26 @@ class App extends React.Component {
     this.state = {
       input: '',
       imageUrl: '',
+      status: false,
       output: {},
       bBoxes: [],
       confidences: [],
-      box: {}
+      box: {},
+      hw: {}, 
+      route: 'signin',
+      isSignedIn: false
     }
   }
 
   calcBoundingBoxes = (data) => {
+    const imgFaces = document.getElementById(IMG_ID);
+    const width = imgFaces.width;
+    const height= imgFaces.height;
+
     const regions = data.outputs[0].data.regions;
     this.setState({bBoxes:      regions.map(region => region.region_info.bounding_box), 
-                  confidences:  regions.map(region => region.value)});
+                  confidences:  regions.map(region => region.value),
+                  hw: {height, width}});
   }
 
   onInputChange = (event) => {
@@ -75,10 +85,12 @@ class App extends React.Component {
       .then(result => {
             const res = JSON.parse(result);
             if (res.status.code === 10000) {
+              this.setState({status: true});
               this.setState({output: res});
               this.calcBoundingBoxes(res);
             } else {
               console.error('Not OK!')
+              console.error('code', res.status.code);
               console.error('description', res.status.description);
               console.error('Reason:', res.outputs[0].status.description);
               throw new Error(res.status.description);
@@ -91,21 +103,48 @@ class App extends React.Component {
       });
   }
 
+  onRouteChange = (route) => {
+    if (route==='signout') {
+      this.setState({isSignedIn: false});
+    } else if (route==='home') {
+      this.setState({isSignedIn: true});
+    }
+    this.setState({route: route});
+  }
+
   render() {
+    const { imageUrl, bBoxes, hw, confidences, route } = this.state;
     return (
       <div className="App">
         <ParticlesBg type="cobweb" bg={true} color="#ffffff"/>
-          <Navigation />
-          <Logo />
-          <Rank />
-          <ImageLinkForm onInputChange={this.onInputChange} onDetectSubmit={this.onDetectSubmit} />
-          <FaceRecognition 
-                status={this.state.status} 
-                imageUrl={this.state.imageUrl} 
-                imgId = {IMG_ID}
-                bBoxes={this.state.bBoxes} 
-                confidences={this.state.confidences} 
-          />
+          { route==='home'  
+            ? <div>
+                  <Navigation onRouteChange={this.onRouteChange} />
+                  <Logo />
+                  <Rank />
+                  <ImageLinkForm onInputChange={this.onInputChange} onDetectSubmit={this.onDetectSubmit} />
+                  <FaceRecognition 
+                    status={this.state.status} 
+                    imageUrl={imageUrl} 
+                    imgId = {IMG_ID}
+                    bBoxes={bBoxes} 
+                    confidences={confidences} 
+                    hw = {hw}
+                  />
+               </div>
+            : (route === 'signin'
+                ?
+                  <div>
+                    <Logo />
+                    <SignIn onRouteChange={this.onRouteChange} />
+                  </div>
+                :
+                  <div>
+                    <Logo />
+                    <Register onRouteChange={this.onRouteChange} />
+                  </div>
+            )
+          }
       </div>
     );
   }
