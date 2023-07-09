@@ -9,7 +9,7 @@ const FaceRecognition = ({imageUrl, imgId ,bBoxes, hw}) => {
             <div className='absolute mt2'>
                 <img id={imgId} src={imageUrl} alt="looking for faces..." width="500px"  height="auto" />
                 {bBoxes.map((box, i) => 
-                    <BoundingBox box={box} hw={hw} boxId={i} />
+                    <BoundingBox box={box} hw={hw} key={i}/>
                 )}
             </div>
         </div>

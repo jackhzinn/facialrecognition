@@ -1,11 +1,11 @@
 import React from "react";
-import Navigation from './components/Navigation/Navigation';
-import Logo from './components/Logo/Logo';
-import Rank from './components/Rank/Rank';
-import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
-import FaceRecognition from './components/FaceRecognition/FaceRecognition';
-import SignIn from './components/SignIn/SignIn';
-import Register from './components/Register/Register';
+import Navigation from './components/Navigation/Navigation.js';
+import Logo from './components/Logo/Logo.js';
+import Rank from './components/Rank/Rank.js';
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm.js';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition.js';
+import SignIn from './components/SignIn/SignIn.js';
+import Register from './components/Register/Register.js';
 import ParticlesBg from 'particles-bg';
 import './App.css';
 
@@ -24,8 +24,25 @@ class App extends React.Component {
       box: {},
       hw: {}, 
       route: 'signin',
-      isSignedIn: false
+      isSignedIn: false,
+      user: {
+        id: '',
+        name: '',
+        email: '',
+        entries: 0,
+        joined: ''
+      }
     }
+  }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name,
+      email: data.email,
+      entries: data.entries,
+      joined: data.joined
+    }});
   }
 
   calcBoundingBoxes = (data) => {
@@ -87,6 +104,15 @@ class App extends React.Component {
             if (res.status.code === 10000) {
               this.setState({status: true});
               this.setState({output: res});
+              fetch('http://localhost:3000/image', {
+                  method: 'put',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({id: this.state.user.id})
+              }) // update entries info
+                .then(res => res.json())
+                .then(count => {
+                  this.setState(Object.assign(this.state.user, {entries: count.entries}));
+                });
               this.calcBoundingBoxes(res);
             } else {
               console.error('Not OK!')
@@ -121,7 +147,10 @@ class App extends React.Component {
             ? <div>
                   <Navigation onRouteChange={this.onRouteChange} />
                   <Logo />
-                  <Rank />
+                  <Rank 
+                    userName={this.state.user.name} 
+                    entries= {this.state.user.entries} 
+                  />
                   <ImageLinkForm onInputChange={this.onInputChange} onDetectSubmit={this.onDetectSubmit} />
                   <FaceRecognition 
                     status={this.state.status} 
@@ -136,12 +165,18 @@ class App extends React.Component {
                 ?
                   <div>
                     <Logo />
-                    <SignIn onRouteChange={this.onRouteChange} />
+                    <SignIn 
+                      onRouteChange={this.onRouteChange} 
+                      loadUser={this.loadUser} 
+                    />
                   </div>
                 :
                   <div>
                     <Logo />
-                    <Register onRouteChange={this.onRouteChange} />
+                    <Register 
+                      onRouteChange={this.onRouteChange} 
+                      loadUser={this.loadUser} 
+                    />
                   </div>
             )
           }
