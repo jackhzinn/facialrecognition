@@ -34,7 +34,8 @@ class SignIn extends React.Component {
                 } else {
                     throw new Error('Invalid User!', user);
                 }
-          });
+          })
+          .catch(err=>{alert('Unable to Sign In');console.log('Error: Invalid user', err)});
     }
 
     render() {
