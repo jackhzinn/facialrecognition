@@ -11,10 +11,7 @@ import './App.css';
 
 const IMG_ID = 'imgId';
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
+const initialState = {
       input: '',
       imageUrl: '',
       status: false,
@@ -33,6 +30,11 @@ class App extends React.Component {
         joined: ''
       }
     }
+
+class App extends React.Component {
+  constructor() {
+    super();
+    this.state = initialState;
   }
 
   loadUser = (data) => {
@@ -112,7 +114,8 @@ class App extends React.Component {
                 .then(res => res.json())
                 .then(count => {
                   this.setState(Object.assign(this.state.user, {entries: count.entries}));
-                });
+                })
+                .catch(console.log);
               this.calcBoundingBoxes(res);
             } else {
               console.error('Not OK!')
@@ -130,8 +133,9 @@ class App extends React.Component {
   }
 
   onRouteChange = (route) => {
-    if (route==='signout') {
+    if (route==='signin') {
       this.setState({isSignedIn: false});
+      this.setState(initialState);
     } else if (route==='home') {
       this.setState({isSignedIn: true});
     }

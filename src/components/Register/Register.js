@@ -37,13 +37,13 @@ class Register extends React.Component {
                     return response.json()
                 }
         })
-            .then(user => {
-                if(user!=='Registration Failed') {
-                    this.props.loadUser(user);
+            .then(data => {
+                if(data.id) {
+                    this.props.loadUser(data);
                     this.props.onRouteChange('home');        
                 } else {
                     this.props.onRouteChange('registration');
-                    alert(user);
+                    alert(data);
                 }
         });
     }
@@ -63,7 +63,8 @@ class Register extends React.Component {
                                 className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                 type="text" 
                                 name="full-name" 
-                                id="full-name" />
+                                id="full-name"
+                                required />
                         </div>
                         <div className="mt3">
                             <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
@@ -72,7 +73,8 @@ class Register extends React.Component {
                                 className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                 type="email" 
                                 name="email-address"  
-                                id="email-address" />
+                                id="email-address"
+                                required />
                         </div>
                         <div className="mv3">
                             <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
@@ -81,7 +83,8 @@ class Register extends React.Component {
                                 className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                                 type="password" 
                                 name="password"  
-                                id="password" />
+                                id="password"
+                                required />
                         </div>
                         </fieldset>
                         <div className="">
