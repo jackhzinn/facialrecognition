@@ -70,9 +70,9 @@ class App extends React.Component {
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify({'input': this.state.input})
               })
-      .then(res => {console.log('before json',res); return res.json()})
-      .then(res => {
-        console.log(res)
+      .then(res => res.json())
+      .then(result => {
+            const res = JSON.parse(result);
             if (res.status.code === 10000) {
               this.setState({status: true});
               this.setState({output: res});
