@@ -65,44 +65,14 @@ class App extends React.Component {
   onDetectSubmit = (event) => {
     this.setState({imageUrl: this.state.input});
 
-    const PAT = '45148ef82a8848ce9f73d68c9f0c5639';
-    // Specify the correct user_id/app_id pairings
-    // Since you're making inferences outside your app's scope
-    const USER_ID = 'jackzinn';       
-    const APP_ID = 'facial-recognition';
-    // Change these to whatever model and image URL you want to use
-    const MODEL_ID = 'face-detection';
-    const IMAGE_URL = this.state.input;
-
-    const raw = JSON.stringify({
-      "user_app_id": {
-          "user_id": USER_ID,
-          "app_id": APP_ID
-      },
-      "inputs": [
-          {
-              "data": {
-                  "image": {
-                      "url": IMAGE_URL
-                  }
-              }
-          }
-      ]
-    });
-    
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Key ' + PAT
-      },
-      body: raw
-   };
-
-  fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
-      .then(response => response.text())
-      .then(result => {
-            const res = JSON.parse(result);
+    fetch("http://localhost:3000/imageDetect", {
+                  method: 'post',
+                  headers: {'Content-Type': 'application/json'},
+                  body: JSON.stringify({'input': this.state.input})
+              })
+      .then(res => {console.log('before json',res); return res.json()})
+      .then(res => {
+        console.log(res)
             if (res.status.code === 10000) {
               this.setState({status: true});
               this.setState({output: res});
