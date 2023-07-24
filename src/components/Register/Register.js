@@ -1,5 +1,10 @@
 import React from "react";
 
+const PROTOCOL = process.env.PROTOCOL ?? 'http';
+const HOST = process.env.HOST ?? 'localhost' ;
+const PORT = process.env.PORT ?? '3000';
+const ROOT = `${PROTOCOL}://${HOST}:${PORT}`;
+
 class Register extends React.Component { 
     constructor(props) {
         super(props);
@@ -21,7 +26,7 @@ class Register extends React.Component {
     }
 
     onSubmitRegister = () => {
-        fetch('http://localhost:3000/register', {
+        fetch(`${ROOT}/register`, {
             method: 'post',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({

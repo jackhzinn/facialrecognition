@@ -11,6 +11,11 @@ import './App.css';
 
 const IMG_ID = 'imgId';
 
+const PROTOCOL = process.env.PROTOCOL ?? 'http';
+const HOST = process.env.HOST ?? 'localhost' ;
+const PORT = process.env.PORT ?? '3000';
+const ROOT = `${PROTOCOL}://${HOST}:${PORT}`;
+
 const initialState = {
       input: '',
       imageUrl: '',
@@ -65,7 +70,7 @@ class App extends React.Component {
   onDetectSubmit = (event) => {
     this.setState({imageUrl: this.state.input});
 
-    fetch("http://localhost:3000/imageDetect", {
+    fetch(`${ROOT}/imageDetect`, {
                   method: 'post',
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify({'input': this.state.input})
@@ -76,7 +81,7 @@ class App extends React.Component {
             if (res.status.code === 10000) {
               this.setState({status: true});
               this.setState({output: res});
-              fetch('http://localhost:3000/image', {
+              fetch(`${ROOT}/image`, {
                   method: 'put',
                   headers: {'Content-Type': 'application/json'},
                   body: JSON.stringify({id: this.state.user.id})
