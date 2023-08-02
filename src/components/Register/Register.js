@@ -32,7 +32,6 @@ class Register extends React.Component {
                         password: this.state.pswd,
                         name: this.state.name
                         })
-            ,mode:'no-cors'
         })
             .then(response=> {
                 if (response.status !== 200) {
