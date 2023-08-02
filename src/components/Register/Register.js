@@ -1,7 +1,7 @@
 import React from "react";
 
 
-const SERVER_ROOT = process.env.SERVER_ROOT ?? 'http://localhost:3000';
+const SERVER_ROOT = process.env.SERVER_ROOT ?? 'https://floating-brook-60677-70b79bf6f14f.herokuapp.com' //'http://localhost:3000';
 
 class Register extends React.Component { 
     constructor(props) {
@@ -32,6 +32,7 @@ class Register extends React.Component {
                         password: this.state.pswd,
                         name: this.state.name
                         })
+            ,mode:'no-cors'
         })
             .then(response=> {
                 if (response.status !== 200) {
