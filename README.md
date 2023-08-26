@@ -1,3 +1,10 @@
+# Application running on Heroku
+[View Application](https://facial-rec-f109b0918924.herokuapp.com/)
+* React.js
+* Node.js
+* PostgreSQL
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
