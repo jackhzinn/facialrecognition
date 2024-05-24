@@ -1,4 +1,4 @@
-# Application running on Heroku
+# Application retired from Heroku
 [View Application](https://facial-rec-f109b0918924.herokuapp.com/)
 * React.js
 * Node.js
